@@ -7,11 +7,11 @@ namespace GildedRose.Tests
     public class ItemUpdaterTests
     {
         [Test]
-        public void StandardItemShouldLowerQualityAndSellInByOne()
+        public void PerishableItemShouldLowerQualityAndSellInByOne()
         {
-            var item = new Item { Name = "+5 Dexterity Vest", SellIn = 3, Quality = 6 };
+            var item = new PerishableItem("+5 Dexterity Vest", 3, 6);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(5, item.Quality);
             Assert.AreEqual(2, item.SellIn);
@@ -73,7 +73,7 @@ namespace GildedRose.Tests
         }
 
         [Test]
-        public void AgedBrieQualityIncreasesTwiceAsFastWhenSellInIsLessThanZero()
+        public void AgeingItemQualityIncreasesTwiceAsFastWhenSellInIsLessThanZero()
         {
             var item = new AgeingItem("Aged Brie", 0, 6);
 
@@ -95,7 +95,7 @@ namespace GildedRose.Tests
         }
 
         [Test]
-        public void SulfurasNeverDecreasesInQualityAndNeverHasToBeSold()
+        public void LegendarytItemNeverDecreasesInQualityAndNeverHasToBeSold()
         {
             var item = new LegendaryItem("Sulfuras, Hand of Ragnaros", 10, 80);
             item.Update();
@@ -131,6 +131,7 @@ namespace GildedRose.Tests
             Program.UpdateQuality(new[] { item });
         }
     }
+
 
     public abstract class ItemBase
     {
@@ -187,6 +188,24 @@ namespace GildedRose.Tests
             if (HasPassedSellByDate())
             {
                 IncreaseQuality();
+            }
+        }
+    }
+
+    public class PerishableItem : ItemBase
+    {
+        public PerishableItem(string name, int sellIn, int quality) : base(name, sellIn, quality)
+        {
+        }
+
+        public override void Update()
+        {
+            DecreaseQuality();
+            DecreaseSellIn();
+
+            if (HasPassedSellByDate())
+            {
+                DecreaseQuality();
             }
         }
     }
