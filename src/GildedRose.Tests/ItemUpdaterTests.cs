@@ -42,31 +42,31 @@ namespace GildedRose.Tests
         [Test]
         public void BackstagePassItemShouldIncreaseQualityTwiceAsFastWhenSellInLessThanElevenDays()
         {
-            var item = new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 10, Quality = 6 };
+            var item = new DesirableEventItem("Backstage passes to a TAFKAL80ETC concert", 10, 6);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(8, item.Quality);
             Assert.AreEqual(9, item.SellIn);
         }
 
         [Test]
-        public void BackstagePassItemShouldIncreaseQualityThreeTimesAsFastWhenSellInLessThanSixDays()
+        public void DesirableEventItemShouldIncreaseQualityThreeTimesAsFastWhenSellInLessThanSixDays()
         {
-            var item = new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 5, Quality = 6 };
+            var item = new DesirableEventItem("Backstage passes to a TAFKAL80ETC concert", 5, 6);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(9, item.Quality);
             Assert.AreEqual(4, item.SellIn);
         }
 
         [Test]
-        public void BackstagePassItemShouldHaveZeroQualityWhenSellInBelowZero()
+        public void DesirableEventItemShouldHaveZeroQualityWhenSellInBelowZero()
         {
-            var item = new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = 0, Quality = 6 };
+            var item = new DesirableEventItem("Backstage passes to a TAFKAL80ETC concert", 0, 6);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(0, item.Quality);
             Assert.AreEqual(-1, item.SellIn);
@@ -129,6 +129,36 @@ namespace GildedRose.Tests
         private void UpdateItem(Item item)
         {
             Program.UpdateQuality(new[] { item });
+        }
+    }
+
+    public class DesirableEventItem : ItemBase
+    {
+        public DesirableEventItem(string name, int sellIn, int quality) : base(name, sellIn, quality)
+        {
+        }
+
+        public override void Update()
+        {
+            // Tickets are more valuable when an event is closer
+            if (SellIn <= 10)
+            {
+                IncreaseQuality();
+            }
+
+            // They increase in value much more the closer we are to the event
+            if (SellIn <= 5)
+            {
+                IncreaseQuality();
+            }
+
+            IncreaseQuality();
+            DecreaseSellIn();
+
+            if (HasPassedSellByDate())
+            {
+                Quality = 0;
+            }
         }
     }
 
