@@ -191,20 +191,13 @@ namespace GildedRose.Tests
         }
     }
 
-    public class LegendaryItem
+    public class LegendaryItem : ItemBase
     {
-        public string Name { get; }
-        public int SellIn { get; protected set; }
-        public int Quality { get; protected set; }
-
-        public LegendaryItem(string name, int sellIn, int quality)
+        public LegendaryItem(string name, int sellIn, int quality) : base(name, sellIn, quality)
         {
-            Name = name;
-            SellIn = sellIn;
-            Quality = quality;
         }
 
-        public void Update()
+        public override void Update()
         {
         }
     }
