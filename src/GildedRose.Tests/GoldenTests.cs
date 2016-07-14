@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using System.IO;
 using GildedRose.Console;
 using NUnit.Framework;

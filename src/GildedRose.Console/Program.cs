@@ -7,7 +7,6 @@ namespace GildedRose.Console
 {
     internal class Program
     {
-        private IList<ItemBase> Items;
 
         internal static void Main(string[] args)
         {
@@ -20,42 +19,30 @@ namespace GildedRose.Console
         {
             System.Console.WriteLine("OMGHAI!");
 
-            var app = new Program
+            Inventory inventory = new Inventory();
+
+            var items = new List<ItemBase>
             {
-                Items = new List<ItemBase>
-                {
-                    new PerishableItem("+5 Dexterity Vest", 10, 20),
-                    new AgeingItem("Aged Brie", 2, 0),
-                    new PerishableItem("Elixir of the Mongoose", 5, 7),
-                    new LegendaryItem("Sulfuras, Hand of Ragnaros", 0, 80),
-                    new DesirableEventItem("Backstage passes to a TAFKAL80ETC concert",15,20),
-                    new ConjuredItem("Conjured Mana Cake", 3, 6)
-                }
+                new PerishableItem("+5 Dexterity Vest", 10, 20),
+                new AgeingItem("Aged Brie", 2, 0),
+                new PerishableItem("Elixir of the Mongoose", 5, 7),
+                new LegendaryItem("Sulfuras, Hand of Ragnaros", 0, 80),
+                new DesirableEventItem("Backstage passes to a TAFKAL80ETC concert", 15, 20),
+                new ConjuredItem("Conjured Mana Cake", 3, 6)
             };
 
-            app.UpdateQuality();
+            inventory.AddAllItems(items);
 
-            PrintItems(app);
+            inventory.Update();
+
+            PrintItems(inventory);
         }
 
-        private static void PrintItems(Program app)
+        private static void PrintItems(Inventory inventory)
         {
-            foreach (var item in app.Items)
+            foreach (var item in inventory)
             {
                 System.Console.WriteLine("{0}|{1}|{2}", item.Name, item.Quality, item.SellIn);
-            }
-        }
-
-        public void UpdateQuality()
-        {
-            UpdateQuality(Items.ToArray());
-        }
-
-        public static void UpdateQuality(ItemBase[] items)
-        {
-            foreach (var item in items)
-            {
-                item.Update();
             }
         }
 
