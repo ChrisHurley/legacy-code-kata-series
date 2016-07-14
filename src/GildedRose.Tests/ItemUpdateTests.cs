@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace GildedRose.Tests
 {
-    public class ItemUpdaterTests
+    public class ItemUpdateTests
     {
         [Test]
         public void PerishableItemShouldLowerQualityAndSellInByOne()

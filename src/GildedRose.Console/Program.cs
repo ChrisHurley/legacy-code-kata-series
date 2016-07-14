@@ -42,7 +42,7 @@ namespace GildedRose.Console
         {
             foreach (var item in inventory)
             {
-                System.Console.WriteLine("{0}|{1}|{2}", item.Name, item.Quality, item.SellIn);
+                System.Console.WriteLine(item.ToString());
             }
         }
 

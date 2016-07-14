@@ -13,11 +13,11 @@ namespace GildedRose.Console
             Items.Add(item);
         }
 
-        public void AddAllItems(IList<ItemBase> list)
+        public void AddAllItems(IEnumerable<ItemBase> list)
         {
             foreach (var item in list)
             {
-                Items.Add(item);
+                AddItem(item);
             }
         }
 
