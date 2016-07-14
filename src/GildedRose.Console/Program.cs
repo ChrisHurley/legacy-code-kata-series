@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GildedRose.Console.Items;
 
 namespace GildedRose.Console
 {
     internal class Program
     {
-        private IList<Item> Items;
+        private IList<ItemBase> Items;
 
         internal static void Main(string[] args)
         {
@@ -21,19 +22,14 @@ namespace GildedRose.Console
 
             var app = new Program
             {
-                Items = new List<Item>
+                Items = new List<ItemBase>
                 {
-                    new Item {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
-                    new Item {Name = "Aged Brie", SellIn = 2, Quality = 0},
-                    new Item {Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7},
-                    new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80},
-                    new Item
-                    {
-                        Name = "Backstage passes to a TAFKAL80ETC concert",
-                        SellIn = 15,
-                        Quality = 20
-                    },
-                    new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
+                    new PerishableItem("+5 Dexterity Vest", 10, 20),
+                    new AgeingItem("Aged Brie", 2, 0),
+                    new PerishableItem("Elixir of the Mongoose", 5, 7),
+                    new LegendaryItem("Sulfuras, Hand of Ragnaros", 0, 80),
+                    new DesirableEventItem("Backstage passes to a TAFKAL80ETC concert",15,20),
+                    new ConjuredItem("Conjured Mana Cake", 3, 6)
                 }
             };
 
@@ -55,113 +51,13 @@ namespace GildedRose.Console
             UpdateQuality(Items.ToArray());
         }
 
-        public static void UpdateQuality(Item[] items)
+        public static void UpdateQuality(ItemBase[] items)
         {
             foreach (var item in items)
             {
-                if (item.Name == "Aged Brie")
-                {
-                    UpdateAgeingItem(item);
-                }
-                else if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
-                {
-                    UpdateDesirableEventItem(item);
-                }
-                else if (item.Name == "Sulfuras, Hand of Ragnaros")
-                {
-                    UpdateLegendaryItem(item);
-                }
-                else if (item.Name == "Conjured Mana Cake")
-                {
-                    UpdateConjuredItem(item);
-                }
-                else
-                {
-                    UpdatePerishableItem(item);
-                }
+                item.Update();
             }
         }
 
-        private static void UpdateConjuredItem(Item item)
-        {
-            DecreaseQuality(item);
-            DecreaseQuality(item);
-            DecreaseSellIn(item);
-        }
-
-        private static void UpdateAgeingItem(Item item)
-        {
-            IncreaseQuality(item);
-            DecreaseSellIn(item);
-
-            if (HasPassedSellByDate(item))
-            {
-                IncreaseQuality(item);
-            }
-        }
-
-        private static void UpdateDesirableEventItem(Item item)
-        {
-            // Tickets are more valuable when an event is closer
-            if (item.SellIn <= 10)
-            {
-                IncreaseQuality(item);
-            }
-
-            // They increase in value much more the closer we are to the event
-            if (item.SellIn <= 5)
-            {
-                IncreaseQuality(item);
-            }
-
-            IncreaseQuality(item);
-            DecreaseSellIn(item);
-
-            if (HasPassedSellByDate(item))
-            {
-                item.Quality = 0;
-            }
-        }
-
-        private static void UpdateLegendaryItem(Item item)
-        {
-        }
-
-        private static void UpdatePerishableItem(Item item)
-        {
-            DecreaseQuality(item);
-            DecreaseSellIn(item);
-
-            if (HasPassedSellByDate(item))
-            {
-                DecreaseQuality(item);
-            }
-        }
-
-        private static bool HasPassedSellByDate(Item item)
-        {
-            return item.SellIn < 0;
-        }
-
-        private static void IncreaseQuality(Item item)
-        {
-            if (item.Quality < 50)
-            {
-                item.Quality = item.Quality + 1;
-            }
-        }
-
-        private static void DecreaseQuality(Item item)
-        {
-            if (item.Quality > 0)
-            {
-                item.Quality = item.Quality - 1;
-            }
-        }
-
-        private static void DecreaseSellIn(Item item)
-        {
-            item.SellIn = item.SellIn - 1;
-        }
     }
 }
