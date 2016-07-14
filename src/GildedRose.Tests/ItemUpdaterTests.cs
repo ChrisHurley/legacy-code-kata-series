@@ -18,22 +18,22 @@ namespace GildedRose.Tests
         }
 
         [Test]
-        public void StandardItemShouldLowerQualityTwiceAsFastWhenSellInIsNegative()
+        public void PerishableItemShouldLowerQualityTwiceAsFastWhenSellInIsNegative()
         {
-            var item = new Item { Name = "+5 Dexterity Vest", SellIn = -2, Quality = 6 };
+            var item = new PerishableItem("+5 Dexterity Vest", -2, 6);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(4, item.Quality);
             Assert.AreEqual(-3, item.SellIn);
         }
 
         [Test]
-        public void StandardItemShouldLowerQualityTwiceAsFastWhenSellInIsZero()
+        public void PerishableItemShouldLowerQualityTwiceAsFastWhenSellInIsZero()
         {
-            var item = new Item { Name = "+5 Dexterity Vest", SellIn = 0, Quality = 6 };
-
-            UpdateItem(item);
+            var item = new PerishableItem("+5 Dexterity Vest", 0, 6);
+        
+            item.Update();
 
             Assert.AreEqual(4, item.Quality);
             Assert.AreEqual(-1, item.SellIn);
@@ -84,11 +84,11 @@ namespace GildedRose.Tests
         }
 
         [Test]
-        public void StandardItemQualityIsNeverNegative()
+        public void PerishableItemQualityIsNeverNegative()
         {
-            var item = new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 0 };
+            var item = new PerishableItem("+5 Dexterity Vest", 10, 0);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(0, item.Quality);
             Assert.AreEqual(9, item.SellIn);
@@ -105,11 +105,11 @@ namespace GildedRose.Tests
         }
 
         [Test]
-        public void AgedBrieQualityCanNeverBeMoreThanFifty()
+        public void AgeingItemQualityCanNeverBeMoreThanFifty()
         {
-            var item = new Item { Name = "Aged Brie", SellIn = -1, Quality = 50 };
+            var item = new AgeingItem("Aged Brie", -1, 50);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(50, item.Quality);
             Assert.AreEqual(-2, item.SellIn);
