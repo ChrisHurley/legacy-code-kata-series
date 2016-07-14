@@ -75,9 +75,9 @@ namespace GildedRose.Tests
         [Test]
         public void AgedBrieQualityIncreasesTwiceAsFastWhenSellInIsLessThanZero()
         {
-            var item = new Item { Name = "Aged Brie", SellIn = 0, Quality = 6 };
+            var item = new AgeingItem("Aged Brie", 0, 6);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(8, item.Quality);
             Assert.AreEqual(-1, item.SellIn);
@@ -129,6 +129,65 @@ namespace GildedRose.Tests
         private void UpdateItem(Item item)
         {
             Program.UpdateQuality(new[] { item });
+        }
+    }
+
+    public abstract class ItemBase
+    {
+        protected ItemBase(string name, int sellIn, int quality)
+        {
+            Name = name;
+            SellIn = sellIn;
+            Quality = quality;
+        }
+
+        public string Name { get; }
+        public int SellIn { get; protected set; }
+        public int Quality { get; protected set; }
+        public abstract void Update();
+
+        protected void IncreaseQuality()
+        {
+            if (Quality < 50)
+            {
+                Quality = Quality + 1;
+            }
+        }
+
+        protected void DecreaseQuality()
+        {
+            if (Quality > 0)
+            {
+                Quality = Quality - 1;
+            }
+        }
+
+        protected void DecreaseSellIn()
+        {
+            SellIn = SellIn - 1;
+        }
+
+        protected bool HasPassedSellByDate()
+        {
+            return SellIn < 0;
+        }
+    }
+
+    public class AgeingItem : ItemBase
+    {
+        public AgeingItem(string name, int sellIn, int quality) : base(name, sellIn, quality)
+        {
+        }
+
+        public override void Update()
+        {
+            IncreaseQuality();
+            DecreaseSellIn();
+
+            if (HasPassedSellByDate())
+            {
+                IncreaseQuality();
+            }
         }
     }
 
