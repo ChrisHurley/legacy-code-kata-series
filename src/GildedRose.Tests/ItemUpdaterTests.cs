@@ -97,9 +97,8 @@ namespace GildedRose.Tests
         [Test]
         public void SulfurasNeverDecreasesInQualityAndNeverHasToBeSold()
         {
-            var item = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 10, Quality = 80 };
-
-            UpdateItem(item);
+            var item = new LegendaryItem("Sulfuras, Hand of Ragnaros", 10, 80);
+            item.Update();
 
             Assert.AreEqual(80, item.Quality);
             Assert.AreEqual(10, item.SellIn);
@@ -130,6 +129,24 @@ namespace GildedRose.Tests
         private void UpdateItem(Item item)
         {
             Program.UpdateQuality(new[] { item });
+        }
+    }
+
+    public class LegendaryItem
+    {
+        public string Name { get; }
+        public int SellIn { get; protected set; }
+        public int Quality { get; protected set; }
+
+        public LegendaryItem(string name, int sellIn, int quality)
+        {
+            Name = name;
+            SellIn = sellIn;
+            Quality = quality;
+        }
+
+        public void Update()
+        {
         }
     }
 }
