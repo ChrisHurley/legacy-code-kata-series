@@ -116,19 +116,29 @@ namespace GildedRose.Tests
         }
 
         [Test]
-        public void ConjuredManaCakeQualityDecreasesTwiceAsFast()
+        public void ConjuredItemQualityDecreasesTwiceAsFast()
         {
-            var item = new Item { Name = "Conjured Mana Cake", SellIn = 6, Quality = 10 };
+            var item = new ConjuredItem("Conjured Mana Cake", 6, 10);
 
-            UpdateItem(item);
+            item.Update();
 
             Assert.AreEqual(8, item.Quality);
             Assert.AreEqual(5, item.SellIn);
         }
 
-        private void UpdateItem(Item item)
+    }
+
+    public class ConjuredItem : ItemBase
+    {
+        public ConjuredItem(string name, int sellIn, int quality) : base(name, sellIn, quality)
         {
-            Program.UpdateQuality(new[] { item });
+        }
+
+        public override void Update()
+        {
+            DecreaseQuality();
+            DecreaseQuality();
+            DecreaseSellIn();
         }
     }
 
